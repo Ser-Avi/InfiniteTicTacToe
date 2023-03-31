@@ -18,7 +18,7 @@ class Move(NamedTuple):     #class for each move
     col:int
     label:str = ""  #whether move is legal
 
-BOARD_SIZE = 3
+BOARD_SIZE = 5
 DEFAULT_PLAYERS = (Player(label="x", color="blue"),
                    Player(label="O", color="green"))
 
@@ -49,7 +49,6 @@ class TicTacToeGame:
         return rows + columns + [first_diagonal, second_diagonal]
 
 
-gameSize = 4
 
 class TicTacToeBoard(tk.Tk):                #class inherits from Tk
     def __init__(self):
@@ -70,10 +69,10 @@ class TicTacToeBoard(tk.Tk):                #class inherits from Tk
     def _create_board_grid(self): 
         grid_frame = tk.Frame(master = self)    #create frame for board frame
         grid_frame.pack()                       #puts it on main window
-        for row in range(gameSize):
+        for row in range(BOARD_SIZE):
             self.rowconfigure(row, weight=1, minsize=50)        #cell weidght and height
             self.columnconfigure(row, weight=1, minsize=75)
-            for col in range(gameSize):
+            for col in range(BOARD_SIZE):
                 button = tk.Button(master=grid_frame, text="", 
                                 font = font.Font(size=36, weight="bold"),
                                 fg="black", width=3, height=2,
