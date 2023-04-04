@@ -44,18 +44,34 @@ class TicTacToeGame:
         """Returns an array of all possible winning combinations"""
         rows = []
         columns = []
-        for i in range(self.board_size):
-            for j in range(self.board_size-self.win_size+2):
+        first_diagonal = [] #Diagonals with negative slope
+        second_diagonal = [] #Diagonals with positive slope
+        for i in range(self.board_size):        #rows
+            for j in range(self.board_size-self.win_size+1):    #columns
                 rows.append([])
                 columns.append([])
-                for k in range(self.win_size):
-                    rows[i*(self.board_size-self.win_size+2)+j].append((i, j+k))
-                    columns[i*(self.board_size-self.win_size+2)+j].append((j+k, i))
-        
-        #rows = [
-        #    [(move.row, move.col) for move in row]
-        #    for row in self._current_moves
-        #]
+                if i<self.board_size-self.win_size+1:
+                    first_diagonal.append([])
+                #second_diagonal.append([])
+                for k in range(self.win_size):  #length of each win
+                    rows[i*(self.board_size-self.win_size+1)+j].append((i, j+k))
+                    columns[i*(self.board_size-self.win_size+1)+j].append((j+k, i))
+                    if i<self.board_size-self.win_size+1:
+                        first_diagonal[i*(self.board_size-self.win_size+1)+j].append((i+k,j+k))
+                    #elif i>=self.win_size:
+                     #   second_diagonal[i*(self.board_size-self.win_size+1)+j].append((i-k, j+k))
+        #second loop for second diagonal->easier to set up this way
+        for i in range(self.win_size-1, self.board_size):       #rows
+            for j in range(self.board_size-self.win_size+1):    #columns
+                second_diagonal.append([])
+                for k in range(self.win_size):                  #length of each win
+                    second_diagonal[(i-self.win_size+1)*(self.board_size-self.win_size+1)+j].append((i-k,j+k))
+
+        """ Old Rows
+        rows = [
+            [(move.row, move.col) for move in row]
+            for row in self._current_moves
+        ]"""
         print("Rows are:")
         print(rows)
         
@@ -65,9 +81,10 @@ class TicTacToeGame:
         #first_diagonal = [row[i] for i, row in enumerate(rows)]
         #second_diagonal = [col[j] for j, col in enumerate(reversed(columns))]
         print("Diagonals are:")
-        #print(first_diagonal)
-        #print(second_diagonal)
-        return rows + columns #+ [first_diagonal, second_diagonal]
+        print(first_diagonal)
+        print("and:")
+        print(second_diagonal)
+        return rows + columns + first_diagonal, second_diagonal
 
     def is_valid_move(self, move):
         """Returns True if move is valid->no winner yet and square is empty"""
