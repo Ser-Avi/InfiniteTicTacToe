@@ -18,8 +18,8 @@ class Move(NamedTuple):     #class for each move
     col:int
     label:str = ""  #whether move is legal
 
-BOARD_SIZE = 5
-WIN_SIZE = 3
+BOARD_SIZE = 10
+WIN_SIZE = 5
 DEFAULT_PLAYERS = (Player(label="X", color="blue"),
                    Player(label="O", color="green"))
 
@@ -67,7 +67,7 @@ class TicTacToeGame:
                 for k in range(self.win_size):                  #length of each win
                     second_diagonal[(i-self.win_size+1)*(self.board_size-self.win_size+1)+j].append((i-k,j+k))
 
-        """ Old Rows
+        """ #Old Rows
         rows = [
             [(move.row, move.col) for move in row]
             for row in self._current_moves
@@ -84,7 +84,8 @@ class TicTacToeGame:
         print(first_diagonal)
         print("and:")
         print(second_diagonal)
-        return rows + columns + first_diagonal, second_diagonal
+        print(rows+columns+first_diagonal+second_diagonal)
+        return rows + columns + first_diagonal + second_diagonal
 
     def is_valid_move(self, move):
         """Returns True if move is valid->no winner yet and square is empty"""
