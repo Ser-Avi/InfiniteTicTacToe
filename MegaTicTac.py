@@ -1,6 +1,6 @@
 """
 Created by Avi Serebrenik
-An infinite tic-tac-toe game built with Python and Tkinter.
+An adjustable tic-tac-toe game built with Python and Tkinter.
 The base tic-tac-toe game was found in the following guide: https://realpython.com/tic-tac-toe-python/
 """
 
