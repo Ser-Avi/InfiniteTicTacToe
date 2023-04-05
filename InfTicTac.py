@@ -18,7 +18,7 @@ class Move(NamedTuple):     #class for each move
     col:int
     label:str = ""  #whether move is legal
 
-BOARD_SIZE = 10
+BOARD_SIZE = 3
 WIN_SIZE = 5
 DEFAULT_PLAYERS = (Player(label="X", color="blue"),
                    Player(label="O", color="green"))
@@ -34,6 +34,7 @@ class TicTacToeGame:
         self._has_winner = False    #if win
         self._winning_combos = []   #list with combos that make a win
         self._setup_board()
+
     
     def _setup_board(self):
         self._current_moves = [[Move(row, col) for col in range(self.board_size)]
@@ -58,33 +59,12 @@ class TicTacToeGame:
                     columns[i*(self.board_size-self.win_size+1)+j].append((j+k, i))
                     if i<self.board_size-self.win_size+1:
                         first_diagonal[i*(self.board_size-self.win_size+1)+j].append((i+k,j+k))
-                    #elif i>=self.win_size:
-                     #   second_diagonal[i*(self.board_size-self.win_size+1)+j].append((i-k, j+k))
         #second loop for second diagonal->easier to set up this way
         for i in range(self.win_size-1, self.board_size):       #rows
             for j in range(self.board_size-self.win_size+1):    #columns
                 second_diagonal.append([])
                 for k in range(self.win_size):                  #length of each win
                     second_diagonal[(i-self.win_size+1)*(self.board_size-self.win_size+1)+j].append((i-k,j+k))
-
-        """ #Old Rows
-        rows = [
-            [(move.row, move.col) for move in row]
-            for row in self._current_moves
-        ]"""
-        print("Rows are:")
-        print(rows)
-        
-        #columns = [list(col) for col in zip(*rows)]
-        print("Columns are")
-        print(columns)
-        #first_diagonal = [row[i] for i, row in enumerate(rows)]
-        #second_diagonal = [col[j] for j, col in enumerate(reversed(columns))]
-        print("Diagonals are:")
-        print(first_diagonal)
-        print("and:")
-        print(second_diagonal)
-        print(rows+columns+first_diagonal+second_diagonal)
         return rows + columns + first_diagonal + second_diagonal
 
     def is_valid_move(self, move):
@@ -120,6 +100,14 @@ class TicTacToeGame:
     def toggle_player(self):
         """Cicles between players"""
         self.current_player = next(self._players)
+    
+    def reset_game(self):
+        """Starts a new game"""
+        for row, row_content in enumerate(self._current_moves):     #resets all moves to empty
+            for col,_ in enumerate(row_content):
+                row_content[col]=Move(row, col)
+        self._has_winner = False    #resets winner
+        self.winner_combo = []      #resets winning move
 
 
 
@@ -129,6 +117,7 @@ class TicTacToeBoard(tk.Tk):                #class inherits from Tk
         self.title("Infinite Tic-Tac-Toe")  #title bar
         self._cells = {}                     #dictionary for row and column of cells
         self._game = game
+        self._create_menu()
         self._create_board_display()
         self._create_board_grid()
 
@@ -148,7 +137,7 @@ class TicTacToeBoard(tk.Tk):                #class inherits from Tk
             self.columnconfigure(row, weight=1, minsize=75)
             for col in range(self._game.board_size):
                 button = tk.Button(master=grid_frame, text="", 
-                                font = font.Font(size=36, weight="bold"),
+                                font = font.Font(size=24, weight="bold"),
                                 fg="black", width=3, height=2,
                                 highlightbackground="lightblue")
                 self._cells[button] = (row,col)             #adds every new button to the dictionary
@@ -190,6 +179,30 @@ class TicTacToeBoard(tk.Tk):                #class inherits from Tk
         for button, coordinates in self._cells.items():
             if coordinates in self._game.winner_combo:
                 button.config(highlightbackground = "red")
+
+    def _create_menu(self):
+        """Creates menu bar to exit and play again"""
+        menu_bar = tk.Menu(master = self)       #instance of menu -> menu bar
+        self.config(menu=menu_bar)              #menu bar is main menu
+        file_menu = tk.Menu(master = menu_bar)  #creates instance of menu -> file menu
+        file_menu.add_command(                  #new command in file menu
+            label = "Play Again",               #play again is the name
+            command = self.reset_board          #resets the board
+        )
+        file_menu.add_separator()
+        file_menu.add_command(label="Exit", command = quit) #adds exit
+        menu_bar.add_cascade(label="File", menu = file_menu)    #adds file
+    
+    def reset_board(self):
+        """Resets the game board"""
+        self._game.reset_game()         #calls upon reset_game method
+        self._update_display(msg = "Ready?")    #reset board display
+        for button in self._cells.keys():       #loops over each button to reset them
+            button.config(highlightbackground = "lightblue")
+            button.config(text = "")
+            button.config(fg = "black")
+
+
 
 #initializes game
 def main():
