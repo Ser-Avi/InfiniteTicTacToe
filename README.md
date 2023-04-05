@@ -1,3 +1,4 @@
-# InfiniteTicTacToe
+# MegaTicTacToe
 
-This is a project I'm currently working on. The concept is to have an "infinitely" large tictactoe game where the user can pick how many Xs or Os in a row count as a win. The base tic-tac-toe game comes from the following guide: https://realpython.com/tic-tac-toe-python/
+This is a project I'm currently working on. The concept is to have a tictactoe game where the user can pick the board size and how many in a row it takes to win.
+The base tic-tac-toe game comes from the following guide: https://realpython.com/tic-tac-toe-python/
