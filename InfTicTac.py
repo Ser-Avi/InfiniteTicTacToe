@@ -18,8 +18,10 @@ class Move(NamedTuple):     #class for each move
     col:int
     label:str = ""  #whether move is legal
 
-BOARD_SIZE = 3
-WIN_SIZE = 5
+BOARD_SIZE = 5
+WIN_SIZE = 3
+MAX_WIN = 10
+MAX_SIZE = 20
 DEFAULT_PLAYERS = (Player(label="X", color="blue"),
                    Player(label="O", color="green"))
 
@@ -190,8 +192,22 @@ class TicTacToeBoard(tk.Tk):                #class inherits from Tk
             command = self.reset_board          #resets the board
         )
         file_menu.add_separator()
-        file_menu.add_command(label="Exit", command = quit) #adds exit
+        file_menu.add_command(label="Exit", command = quit)     #adds exit
         menu_bar.add_cascade(label="File", menu = file_menu)    #adds file
+        
+        """ THIS IS IN PROGRESS
+        #adding options to customize game-> Game menu 
+        game_menu = tk.Menu(master = menu_bar)
+        win_size_menu = tk.Menu(master = game_menu)
+        for i in range(2,MAX_WIN):
+            win_size_menu.add_command(label = str(i), command = win_size(i))
+        board_size_menu = tk.Menu(master = game_menu)
+        for j in range(WIN_SIZE, MAX_SIZE):
+            board_size_menu.add_command(label = str(j), command = board_size(j))
+        game_menu.add_cascade(label = "Win Size", menu = win_size_menu)
+        game_menu.add_cascade(label = "Board Size", menu = board_size_menu)
+        menu_bar.add_cascade(label = "Game", menu = game_menu)
+        """
     
     def reset_board(self):
         """Resets the game board"""
@@ -201,7 +217,6 @@ class TicTacToeBoard(tk.Tk):                #class inherits from Tk
             button.config(highlightbackground = "lightblue")
             button.config(text = "")
             button.config(fg = "black")
-
 
 
 #initializes game
