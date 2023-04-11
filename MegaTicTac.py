@@ -9,6 +9,10 @@ from itertools import cycle
 from tkinter import font
 from typing import NamedTuple
 
+"""Solves segmentation fault error that appeared"""
+import faulthandler
+faulthandler.enable()
+
 class Player(NamedTuple):   #player class
     label: str  #store x or o
     color:str   #color for player indentification
