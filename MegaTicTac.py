@@ -22,8 +22,8 @@ class Move(NamedTuple):     #class for each move
     col:int
     label:str = ""  #whether move is legal
 
-BOARD_SIZE = 5
-WIN_SIZE = 3
+BOARD_SIZE = 2
+WIN_SIZE = 2
 MAX_WIN = 10
 MAX_SIZE = 20
 DEFAULT_PLAYERS = (Player(label="X", color="blue"),
