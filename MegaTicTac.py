@@ -45,35 +45,41 @@ class StartScreen(tk.Tk):
         self._create_screen()
 
     def _create_display(self):
+        """Creates the base display frame"""
         display_frame = tk.Frame(master=self)       #frame object holds display, main window is parent
-        display_frame.pack(fill=tk.X)               #fill's screen with game board
-        self.display = tk.Label(master=display_frame, 
+        display_frame.pack(fill=tk.X)               
+        self.display = tk.Label(master=display_frame,   #creates display title
                                 text="Mega Tic Tac Toe", 
                                 font=font.Font(size=28, weight="bold"),
                                 padx=100)
         self.display.pack()
     
     def _create_screen(self):
+        """Creates the sliders and button in the start screen"""
         screen_frame = tk.Frame(master = self)    #create frame for board frame
         screen_frame.pack()
-        size_scale = tk.Scale(master = screen_frame,
+        size_scale = tk.Scale(master = screen_frame,    #scale for size adjustment
                               orient = "horizontal",
                               from_ = 2,
                               to=MAX_SIZE,
                               command= board_adjust)
-        win_scale = tk.Scale(master = screen_frame,
+        win_scale = tk.Scale(master = screen_frame,     #scale for win adjustment
                               orient = "horizontal",
                               from_ = 2,
                               to=MAX_WIN,
                               command= win_adjust)
         size_name = tk.Label(master = screen_frame,
-                              text = "Set Board Size")
+                              text = "Board Size:")
         win_name = tk.Label(master = screen_frame,
-                              text = "Set Number of Tiles Needed to Win")
-        size_name.pack(anchor = "center")
-        size_scale.pack(anchor = "center")
-        win_name.pack(anchor="center")
-        win_scale.pack(anchor="center")
+                              text = "Win Size:")
+        start_button = tk.Button(master = screen_frame, #button to start game
+                                 text = "Start",
+                                 command = self.destroy)
+        size_name.grid(row = 1, column = 0, pady = 15)
+        size_scale.grid(row = 1, column = 2, pady = 15)
+        win_name.grid(row = 2, column = 0, padx = 10)
+        win_scale.grid(row = 2, column = 2)
+        start_button.grid(row = 3, column = 1, pady = 15)
 
 
 class TicTacToeGame:
