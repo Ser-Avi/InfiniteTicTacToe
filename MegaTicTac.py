@@ -25,6 +25,57 @@ MAX_SIZE = 20
 DEFAULT_PLAYERS = (Player(label="X", color="blue"),
                    Player(label="O", color="green"))
 
+def board_adjust(i):
+    """Adjusts the global variable of Board Size"""
+    global BOARD_SIZE
+    BOARD_SIZE = i
+
+def win_adjust(i):
+    """Adjusts the global variable of Win Size"""
+    global WIN_SIZE
+    WIN_SIZE = i
+
+class StartScreen(tk.Tk):
+    """Creates the start screen before the game"""
+    def __init__(self):
+        super().__init__()                  #initialize parent class
+        self.title("Mega Tic-Tac-Toe")      #title bar
+        #self._create_menu()                #set up if menu needed
+        self._create_display()
+        self._create_screen()
+
+    def _create_display(self):
+        display_frame = tk.Frame(master=self)       #frame object holds display, main window is parent
+        display_frame.pack(fill=tk.X)               #fill's screen with game board
+        self.display = tk.Label(master=display_frame, 
+                                text="Mega Tic Tac Toe", 
+                                font=font.Font(size=28, weight="bold"),
+                                padx=100)
+        self.display.pack()
+    
+    def _create_screen(self):
+        screen_frame = tk.Frame(master = self)    #create frame for board frame
+        screen_frame.pack()
+        size_scale = tk.Scale(master = screen_frame,
+                              orient = "horizontal",
+                              from_ = 2,
+                              to=MAX_SIZE,
+                              command= board_adjust)
+        win_scale = tk.Scale(master = screen_frame,
+                              orient = "horizontal",
+                              from_ = 2,
+                              to=MAX_WIN,
+                              command= win_adjust)
+        size_name = tk.Label(master = screen_frame,
+                              text = "Set Board Size")
+        win_name = tk.Label(master = screen_frame,
+                              text = "Set Number of Tiles Needed to Win")
+        size_name.pack(anchor = "center")
+        size_scale.pack(anchor = "center")
+        win_name.pack(anchor="center")
+        win_scale.pack(anchor="center")
+
+
 class TicTacToeGame:
     def __init__(self, players=DEFAULT_PLAYERS, board_size = BOARD_SIZE, win_size = WIN_SIZE):
         self._players = cycle(players)  #cycles over player tuple
@@ -116,7 +167,7 @@ class TicTacToeGame:
 class TicTacToeBoard(tk.Tk):                #class inherits from Tk
     def __init__(self, game):
         super().__init__()                  #initialize parent class
-        self.title("Infinite Tic-Tac-Toe")  #title bar
+        self.title("Mega Tic-Tac-Toe")      #title bar
         self._cells = {}                     #dictionary for row and column of cells
         self._game = game
         self._create_menu()
@@ -194,20 +245,6 @@ class TicTacToeBoard(tk.Tk):                #class inherits from Tk
         file_menu.add_separator()
         file_menu.add_command(label="Exit", command = quit)     #adds exit
         menu_bar.add_cascade(label="File", menu = file_menu)    #adds file
-        
-        """ THIS IS IN PROGRESS
-        #adding options to customize game-> Game menu 
-        game_menu = tk.Menu(master = menu_bar)
-        win_size_menu = tk.Menu(master = game_menu)
-        for i in range(2,MAX_WIN):
-            win_size_menu.add_command(label = str(i), command = win_size(i))
-        board_size_menu = tk.Menu(master = game_menu)
-        for j in range(WIN_SIZE, MAX_SIZE):
-            board_size_menu.add_command(label = str(j), command = board_size(j))
-        game_menu.add_cascade(label = "Win Size", menu = win_size_menu)
-        game_menu.add_cascade(label = "Board Size", menu = board_size_menu)
-        menu_bar.add_cascade(label = "Game", menu = game_menu)
-        """
     
     def reset_board(self):
         """Resets the game board"""
@@ -221,7 +258,10 @@ class TicTacToeBoard(tk.Tk):                #class inherits from Tk
 
 #initializes game
 def main():
-    game = TicTacToeGame()
+    start = StartScreen()
+    start.mainloop()
+    game = TicTacToeGame(board_size=int(BOARD_SIZE),
+                         win_size=int(WIN_SIZE))
     board = TicTacToeBoard(game)
     board.mainloop()
 
