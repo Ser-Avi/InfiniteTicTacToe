@@ -46,8 +46,12 @@ def name_adjust(zero, x):
     print(x)
     print(zero)
     print(DEFAULT_PLAYERS[0].player_name)
-    player_zero = DEFAULT_PLAYERS[0]
-    player_x = DEFAULT_PLAYERS[1]
+    if x =="":
+        x = "X"
+    if zero == "":
+        zero = "O"
+    player_zero = DEFAULT_PLAYERS[1]
+    player_x = DEFAULT_PLAYERS[0]
     DEFAULT_PLAYERS = (Player(label = player_x.label, color = player_x.color, player_name = x ),
                        Player(label = player_zero.label, color = player_zero.color, player_name = zero))
 
@@ -58,7 +62,6 @@ class StartScreen(tk.Tk):
     def __init__(self):
         super().__init__()                  #initialize parent class
         self.title("Mega Tic-Tac-Toe")      #title bar
-        #self._create_menu()                #set up if menu needed
         self._create_display()
         self._create_screen()
         self._set_name()
@@ -100,8 +103,8 @@ class StartScreen(tk.Tk):
         """Sets name of players based on input and has start button"""
         name_frame = tk.Frame(master = self)    #create frame for board frame
         name_frame.pack()
-        zero_label = tk.Label(master = name_frame, text = "Player X Name:")
-        x_label = tk.Label (master = name_frame, text = "Player O Name:")
+        zero_label = tk.Label(master = name_frame, text = "Player O Name:")
+        x_label = tk.Label (master = name_frame, text = "Player X Name:")
         zero_label.grid(row = 0, column = 0)
         x_label.grid(row = 1, column = 0)
         name_zero = tk.Entry(master = name_frame)
@@ -110,8 +113,16 @@ class StartScreen(tk.Tk):
         name_x.grid(row = 1, column = 1)
         start_button = tk.Button(master = name_frame, #button to start game
                                  text = "Start",
-                                 command = lambda:[name_adjust(name_zero.get(),name_x.get()),self.destroy()])
+                                 command = lambda:[name_adjust(name_zero.get(),name_x.get()),
+                                                   self.destroy(),self.start_game()])
         start_button.grid(row = 4, column = 1, pady = 15)
+    
+    def start_game(self):
+        game = TicTacToeGame(board_size=int(BOARD_SIZE),
+                         win_size=int(WIN_SIZE),
+                         players = DEFAULT_PLAYERS)
+        board = TicTacToeBoard(game)
+        board.mainloop()
 
 
 
@@ -209,7 +220,7 @@ class TicTacToeBoard(tk.Tk):                #class inherits from Tk
         self.title("Mega Tic-Tac-Toe")      #title bar
         self._cells = {}                     #dictionary for row and column of cells
         self._game = game
-        self._create_menu()
+        #self._create_menu()
         self._create_board_display()
         self._create_board_grid()
 
@@ -242,18 +253,21 @@ class TicTacToeBoard(tk.Tk):                #class inherits from Tk
         row, col = self._cells[clicked_btn]     #cell's coordinates
         move = Move(row, col, self._game.current_player.label)
         self.play_again = tk.Button(text = "Play Again?", command = self.reset_board)
+        self.change_settings = tk.Button(text = "Change Settings", command = lambda:[self.destroy(),main()])
         if self._game.is_valid_move(move):      #if move is valid
             self._update_button(clicked_btn)    #set button to player
             self._game.process_move(move)       #process move
             if self._game.is_tied():            #check if game is tied
                 self._update_display(msg = "Tied!", color = "green")
                 self.play_again.pack()
+                self.change_settings.pack()
             elif self._game.has_winner():       #check if game is won
                 self._highlight_cells()         #highlight winning cells
                 msg = f'Player "{self._game.current_player.player_name}" won!'
                 color = self._game.current_player.color
                 self._update_display(msg, color)    #update display to winner message
                 self.play_again.pack()
+                self.change_settings.pack()
             else:
                 self._game.toggle_player()      #no winner or tie->continue with next player
                 msg = f"{self._game.current_player.player_name}'s turn"
@@ -274,9 +288,10 @@ class TicTacToeBoard(tk.Tk):                #class inherits from Tk
         for button, coordinates in self._cells.items():
             if coordinates in self._game.winner_combo:
                 button.config(highlightbackground = "red")
-
+    """
+    Currently unused top menu:
     def _create_menu(self):
-        """Creates menu bar to exit and play again"""
+        #Creates menu bar to exit and play again
         menu_bar = tk.Menu(master = self)       #instance of menu -> menu bar
         self.config(menu=menu_bar)              #menu bar is main menu
         file_menu = tk.Menu(master = menu_bar)  #creates instance of menu -> file menu
@@ -287,12 +302,14 @@ class TicTacToeBoard(tk.Tk):                #class inherits from Tk
         file_menu.add_separator()
         file_menu.add_command(label="Exit", command = quit)     #adds exit
         menu_bar.add_cascade(label="File", menu = file_menu)    #adds file
+    """
     
     def reset_board(self):
         """Resets the game board"""
         self._game.reset_game()         #calls upon reset_game method
         self._update_display(msg = "Ready?")    #reset board display
         self.play_again.pack_forget()
+        self.change_settings.pack_forget()
         for button in self._cells.keys():       #loops over each button to reset them
             button.config(highlightbackground = "lightblue")
             button.config(text = "")
@@ -303,11 +320,11 @@ class TicTacToeBoard(tk.Tk):                #class inherits from Tk
 def main():
     start = StartScreen()
     start.mainloop()
-    game = TicTacToeGame(board_size=int(BOARD_SIZE),
-                         win_size=int(WIN_SIZE),
-                         players = DEFAULT_PLAYERS)
-    board = TicTacToeBoard(game)
-    board.mainloop()
+    #game = TicTacToeGame(board_size=int(BOARD_SIZE),
+    #                     win_size=int(WIN_SIZE),
+    #                     players = DEFAULT_PLAYERS)
+    #board = TicTacToeBoard(game)
+    #board.mainloop()
 
 if __name__ == "__main__":
     main()
