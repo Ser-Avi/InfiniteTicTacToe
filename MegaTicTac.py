@@ -117,7 +117,6 @@ class StartScreen(tk.Tk):
                         Player(label = player_zero.label, color = player_zero.color, player_name = zero))
 
 
-
 class TicTacToeGame:
     def __init__(self, players=DEFAULT_PLAYERS, board_size = BOARD_SIZE, win_size = WIN_SIZE):
         self._players = cycle(players)  #cycles over player tuple
@@ -129,7 +128,6 @@ class TicTacToeGame:
         self._has_winner = False    #if win
         self._winning_combos = []   #list with combos that make a win
         self._setup_board()
-
     
     def _setup_board(self):
         self._current_moves = [[Move(row, col) for col in range(self.board_size)]
@@ -205,7 +203,6 @@ class TicTacToeGame:
         self.winner_combo = []      #resets winning move
 
 
-
 class TicTacToeBoard(tk.Tk):                #class inherits from Tk
     def __init__(self, game):
         super().__init__()                  #initialize parent class
@@ -227,7 +224,7 @@ class TicTacToeBoard(tk.Tk):                #class inherits from Tk
         grid_frame = tk.Frame(master = self)    #create frame for board frame
         grid_frame.pack()                       #puts it on main window
         for row in range(self._game.board_size):
-            self.rowconfigure(row, weight=1, minsize=50)        #cell weidght and height
+            self.rowconfigure(row, weight=1, minsize=50)        #cell widght and height
             self.columnconfigure(row, weight=1, minsize=75)
             for col in range(self._game.board_size):
                 button = tk.Button(master=grid_frame, text="", 
@@ -296,11 +293,6 @@ class TicTacToeBoard(tk.Tk):                #class inherits from Tk
 def main():
     start = StartScreen()
     start.mainloop()
-    #game = TicTacToeGame(board_size=int(BOARD_SIZE),
-    #                     win_size=int(WIN_SIZE),
-    #                     players = DEFAULT_PLAYERS)
-    #board = TicTacToeBoard(game)
-    #board.mainloop()
 
 if __name__ == "__main__":
     main()
