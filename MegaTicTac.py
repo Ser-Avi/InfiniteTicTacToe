@@ -19,21 +19,24 @@ class Move(NamedTuple):     #class for each move
     col:int
     label:str = ""  #whether move is legal
 
+#global variables for default setting adjusting
 BOARD_SIZE = 2
 WIN_SIZE = 2
-MAX_WIN = 10
-MAX_SIZE = 20
+MAX_WIN = 8
+MAX_SIZE = 15
+BIG_BOARD = False
 DEFAULT_PLAYERS = (Player(label="X", color="blue", player_name = "X"),
                    Player(label="O", color="green", player_name="O"))
 
 
 class StartScreen(tk.Tk):
     """Creates the start screen before the game"""
-    def __init__(self, board_size = BOARD_SIZE, win_size = WIN_SIZE, default_players = DEFAULT_PLAYERS):
+    def __init__(self, board_size = BOARD_SIZE, win_size = WIN_SIZE, default_players = DEFAULT_PLAYERS, big_board = BIG_BOARD):
         super().__init__()                  #initialize parent class
         self.board_size = board_size
         self.win_size = win_size
         self.players = default_players
+        self.big_board = big_board
         self.title("Mega Tic-Tac-Toe")      #title bar
         self._create_display()
         self._create_screen()
@@ -91,15 +94,19 @@ class StartScreen(tk.Tk):
         start_button.grid(row = 4, column = 1, pady = 15)
     
     def start_game(self):
-        game = TicTacToeGame(board_size=self.board_size,
-                         win_size=self.win_size,
+        game = TicTacToeGame(board_size = self.board_size,
+                         win_size = self.win_size,
                          players = self.players)
-        board = TicTacToeBoard(game)
+        board = TicTacToeBoard(game, big_board = self.big_board)
         board.mainloop()
     
     def board_adjust(self,i):
         """Adjusts board size"""
         self.board_size = int(i)
+        if int(i)>10:
+            self.big_board = True
+        else:
+            self.big_board = False
     
     def win_adjust(self, i):
         """Adjusts win size"""
@@ -204,30 +211,44 @@ class TicTacToeGame:
 
 
 class TicTacToeBoard(tk.Tk):                #class inherits from Tk
-    def __init__(self, game):
+    def __init__(self, game, big_board = BIG_BOARD):
         super().__init__()                  #initialize parent class
         self.title("Mega Tic-Tac-Toe")      #title bar
         self._cells = {}                     #dictionary for row and column of cells
         self._game = game
+        self.big_board = big_board
         self._create_board_display()
         self._create_board_grid()
 
     def _create_board_display(self):
+        """Creates the display window and ready text"""
         display_frame = tk.Frame(master=self)       #frame object holds display, main window is parent
         display_frame.pack(fill=tk.X)               #fill's screen with game board
-        self.display = tk.Label(master=display_frame, 
+        if self.big_board:
+            self.display = tk.Label(master=display_frame, 
                                 text=f"Ready? {self._game.current_player.player_name} starts", 
-                                font=font.Font(size=28, weight="bold"))
+                                font=font.Font(size=16, weight="bold"))
+        else:
+            self.display = tk.Label(master=display_frame, 
+                                    text=f"Ready? {self._game.current_player.player_name} starts", 
+                                    font=font.Font(size=28, weight="bold"))
         self.display.pack()
 
-    def _create_board_grid(self): 
+    def _create_board_grid(self):
+        """Creates the button grid for the game board""" 
         grid_frame = tk.Frame(master = self)    #create frame for board frame
         grid_frame.pack()                       #puts it on main window
         for row in range(self._game.board_size):
             self.rowconfigure(row, weight=1, minsize=50)        #cell widght and height
             self.columnconfigure(row, weight=1, minsize=75)
             for col in range(self._game.board_size):
-                button = tk.Button(master=grid_frame, text="", 
+                if self.big_board:
+                    button = tk.Button(master = grid_frame, text="",
+                                        font = font.Font(size=12, weight="bold"),
+                                        fg="black", width=3, height=2,
+                                        highlightbackground="lightblue")
+                else:
+                    button = tk.Button(master=grid_frame, text="", 
                                 font = font.Font(size=24, weight="bold"),
                                 fg="black", width=3, height=2,
                                 highlightbackground="lightblue")
