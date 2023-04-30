@@ -20,11 +20,11 @@ class Move(NamedTuple):     #class for each move
     label:str = ""  #whether move is legal
 
 #global variables for default setting adjusting
-BOARD_SIZE = 2
-WIN_SIZE = 2
-MAX_WIN = 8
-MAX_SIZE = 15
-BIG_BOARD = False
+BOARD_SIZE: int = 2
+WIN_SIZE: int = 2
+MAX_WIN: int = 8
+MAX_SIZE: int = 15
+BIG_BOARD: bool = False
 DEFAULT_PLAYERS = (Player(label="X", color="blue", player_name = "X"),
                    Player(label="O", color="green", player_name="O"))
 
@@ -94,6 +94,7 @@ class StartScreen(tk.Tk):
         start_button.grid(row = 4, column = 1, pady = 15)
     
     def start_game(self):
+        """Starts the game with the appropriate settings"""
         game = TicTacToeGame(board_size = self.board_size,
                          win_size = self.win_size,
                          players = self.players)
@@ -125,6 +126,7 @@ class StartScreen(tk.Tk):
 
 
 class TicTacToeGame:
+    """The game mechanisms"""
     def __init__(self, players=DEFAULT_PLAYERS, board_size = BOARD_SIZE, win_size = WIN_SIZE):
         self._players = cycle(players)  #cycles over player tuple
         self.board_size = board_size
@@ -137,6 +139,7 @@ class TicTacToeGame:
         self._setup_board()
     
     def _setup_board(self):
+        """Sets up the board's current moves and winning combos"""
         self._current_moves = [[Move(row, col) for col in range(self.board_size)]
                                for row in range(self.board_size)]   #initial list of player moves
         self._winning_combos = self._get_winning_combos()
@@ -211,6 +214,7 @@ class TicTacToeGame:
 
 
 class TicTacToeBoard(tk.Tk):                #class inherits from Tk
+    """Class for the game board"""
     def __init__(self, game, big_board = BIG_BOARD):
         super().__init__()                  #initialize parent class
         self.title("Mega Tic-Tac-Toe")      #title bar
@@ -310,8 +314,8 @@ class TicTacToeBoard(tk.Tk):                #class inherits from Tk
             button.config(fg = "black")
 
 
-#initializes game
 def main():
+    """Initializes the game"""
     start = StartScreen()
     start.mainloop()
 
