@@ -1,6 +1,5 @@
 # MegaTicTacToe
 
-This is a project I'm currently working on. The concept is to have a tic tac toe game where the user can pick the board size and how many in a row it takes to win.
-The base tic-tac-toe game comes from the following guide: https://realpython.com/tic-tac-toe-python/
+Play Tic-Tac-Toe with different-sized boards and win conditions! To use, grab a friend (or challenge your brain's other half?) and run the MegaTicTac.py file!
 
-The project is currently done, I just need to update documentation like this readme.
+This project was written by me, Ser-Avi, in Python using the TKinter interface. The base tic-tac-toe game was created based on this guide: https://realpython.com/tic-tac-toe-python/
